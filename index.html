@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy tính calo</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: auto; background: #f4f4f4; padding: 20px; border-radius: 10px; }
+        input, select, button { margin: 10px 0; padding: 8px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tính toán lượng calo</h2>
+        <label>Giới tính:</label>
+        <select id="gender">
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+        </select>
+        <label>Cân nặng (kg):</label>
+        <input type="number" id="weight" placeholder="Nhập cân nặng" required>
+        <label>Chiều cao (cm):</label>
+        <input type="number" id="height" placeholder="Nhập chiều cao" required>
+        <label>Tuổi:</label>
+        <input type="number" id="age" placeholder="Nhập tuổi" required>
+        <label>Mức độ vận động:</label>
+        <select id="activity">
+            <option value="1.2">Ít vận động</option>
+            <option value="1.375">Vận động nhẹ (1-3 lần/tuần)</option>
+            <option value="1.55">Vận động vừa (3-5 lần/tuần)</option>
+            <option value="1.725">Vận động nhiều (6-7 lần/tuần)</option>
+            <option value="1.9">Vận động rất nhiều</option>
+        </select>
+        <button onclick="calculateCalories()">Tính toán</button>
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        function calculateCalories() {
+            let gender = document.getElementById("gender").value;
+            let weight = parseFloat(document.getElementById("weight").value);
+            let height = parseFloat(document.getElementById("height").value);
+            let age = parseInt(document.getElementById("age").value);
+            let activity = parseFloat(document.getElementById("activity").value);
+            
+            let BMR;
+            if (gender === "male") {
+                BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+            
+            let TDEE = BMR * activity;
+            let loseWeight = TDEE - 500;
+            let gainWeight = TDEE + 500;
+            
+            document.getElementById("result").innerHTML = 
+                `BMR: ${BMR.toFixed(2)} cal/ngày<br>
+                TDEE: ${TDEE.toFixed(2)} cal/ngày<br>
+                Giảm cân: ${loseWeight.toFixed(2)} cal/ngày<br>
+                Tăng cân: ${gainWeight.toFixed(2)} cal/ngày`;
+        }
+    </script>
+</body>
+</html>
