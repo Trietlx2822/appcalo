@@ -59,11 +59,11 @@
             <option value="female">Nữ</option>
         </select>
         <label>Cân nặng (kg):</label>
-        <input type="number" id="weight" placeholder="Nhập cân nặng" required>
+        <input type="number" id="weight" placeholder="Nhập cân nặng">
         <label>Chiều cao (cm):</label>
-        <input type="number" id="height" placeholder="Nhập chiều cao" required>
+        <input type="number" id="height" placeholder="Nhập chiều cao">
         <label>Tuổi:</label>
-        <input type="number" id="age" placeholder="Nhập tuổi" required>
+        <input type="number" id="age" placeholder="Nhập tuổi">
         <label>Mức độ vận động:</label>
         <select id="activity">
             <option value="1.2">Ít vận động</option>
@@ -77,38 +77,21 @@
     </div>
 
     <script>
-        // Hàm tính macros (protein, fat, carb) dựa trên công thức gợi ý
         function calculateMacros(weight, calTarget) {
-            // Nếu calTarget quá thấp (chẳng hạn < 0), ta cho về 0 để tránh kết quả âm
             if (calTarget < 0) {
-                return {
-                    protein: 0,
-                    fat: 0,
-                    carbs: 0
-                };
+                return { protein: 0, fat: 0, carbs: 0 };
             }
 
-            // Protein: 2g / kg
-            let proteinGrams = 2 * weight; 
+            let proteinGrams = 2 * weight; // 2g protein/kg
             let proteinCals = proteinGrams * 4;
-
-            // Fat: 25% tổng calo
-            let fatCals = calTarget * 0.25;
+            
+            let fatCals = calTarget * 0.25; // Fat = 25% tổng calo
             let fatGrams = fatCals / 9;
-
-            // Carbs: phần còn lại
+            
             let carbCals = calTarget - (proteinCals + fatCals);
-            // Trường hợp nếu carbCals âm, set về 0
-            if (carbCals < 0) {
-                carbCals = 0;
-            }
-            let carbGrams = carbCals / 4;
-
-            return {
-                protein: proteinGrams,
-                fat: fatGrams,
-                carbs: carbGrams
-            };
+            let carbGrams = carbCals > 0 ? carbCals / 4 : 0; // Đảm bảo không bị âm
+            
+            return { protein: proteinGrams, fat: fatGrams, carbs: carbGrams };
         }
 
         function calculateCalories() {
@@ -118,52 +101,44 @@
             let age = parseInt(document.getElementById("age").value);
             let activity = parseFloat(document.getElementById("activity").value);
             
-            // Tính BMR
-            let BMR;
-            if (gender === "male") {
-                BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-            } else {
-                BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            // Kiểm tra input có hợp lệ không
+            if (isNaN(weight) || isNaN(height) || isNaN(age)) {
+                document.getElementById("result").innerHTML = "Vui lòng nhập đầy đủ thông tin!";
+                return;
             }
             
-            // TDEE
+            let BMR = gender === "male" 
+                ? (10 * weight) + (6.25 * height) - (5 * age) + 5 
+                : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            
             let TDEE = BMR * activity;
-            // Giảm 500 cal để giảm cân, tăng 500 cal để tăng cân
             let loseWeight = TDEE - 500;
             let gainWeight = TDEE + 500;
             
-            // Tính macros cho từng mục tiêu
             let macrosTDEE = calculateMacros(weight, TDEE);
             let macrosLose = calculateMacros(weight, loseWeight);
             let macrosGain = calculateMacros(weight, gainWeight);
 
-            // Hiển thị kết quả
             document.getElementById("result").innerHTML = `
-                <strong>BMR (Tỷ lệ trao đổi chất cơ bản):</strong> 
-                <br>${BMR.toFixed(2)} cal/ngày<br><br>
-                <strong>TDEE (Tổng calo tiêu hao/ngày):</strong> 
-                <br>${TDEE.toFixed(2)} cal/ngày<br><br>
-                <strong>Giảm cân:</strong> 
-                <br>${loseWeight.toFixed(2)} cal/ngày<br><br>
-                <strong>Tăng cân:</strong> 
-                <br>${gainWeight.toFixed(2)} cal/ngày<br><br>
+                <strong>BMR (Calo cơ bản):</strong> ${BMR.toFixed(2)} cal/ngày<br>
+                <strong>TDEE (Duy trì cân nặng):</strong> ${TDEE.toFixed(2)} cal/ngày<br>
+                <strong>Giảm cân:</strong> ${loseWeight.toFixed(2)} cal/ngày<br>
+                <strong>Tăng cân:</strong> ${gainWeight.toFixed(2)} cal/ngày<br><br>
 
-                <h4>Macros (theo gợi ý 2g protein/kg, 25% calo từ fat):</h4>
-                
-                <strong>- Duy trì (TDEE):</strong><br>
+                <h4>Macros (Duy trì):</h4>
                 Protein: ${macrosTDEE.protein.toFixed(2)} g<br>
                 Fat: ${macrosTDEE.fat.toFixed(2)} g<br>
                 Carbs: ${macrosTDEE.carbs.toFixed(2)} g<br><br>
 
-                <strong>- Giảm cân:</strong><br>
+                <h4>Macros (Giảm cân):</h4>
                 Protein: ${macrosLose.protein.toFixed(2)} g<br>
                 Fat: ${macrosLose.fat.toFixed(2)} g<br>
                 Carbs: ${macrosLose.carbs.toFixed(2)} g<br><br>
 
-                <strong>- Tăng cân:</strong><br>
+                <h4>Macros (Tăng cân):</h4>
                 Protein: ${macrosGain.protein.toFixed(2)} g<br>
                 Fat: ${macrosGain.fat.toFixed(2)} g<br>
-                Carbs: ${macrosGain.carbs.toFixed(2())} g
+                Carbs: ${macrosGain.carbs.toFixed(2)} g
             `;
         }
     </script>
