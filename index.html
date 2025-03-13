@@ -99,7 +99,23 @@
                 `BMR tỷ lệ trao đổi chất cơ bản: <br>${BMR.toFixed(2)} cal/ngày<br>
                 TDEE tổng lượng calo tiêu hao trong 1 ngày: <br>${TDEE.toFixed(2)} cal/ngày<br>
                 Giảm cân: <br>${loseWeight.toFixed(2)} cal/ngày<br>
-                Tăng cân: <br>${gainWeight.toFixed(2)} cal/ngày`;
+                Tăng cân: <br>${gainWeight.toFixed(2)} cal/ngày<br><br>
+                <h4>Macros (theo gợi ý 2g protein/kg, 25% calo từ fat):</h4>
+                
+                <strong>- Duy trì (TDEE):</strong><br>
+                Protein: ${macrosTDEE.protein.toFixed(2)} g<br>
+                Fat: ${macrosTDEE.fat.toFixed(2)} g<br>
+                Carbs: ${macrosTDEE.carbs.toFixed(2)} g<br><br>
+
+                <strong>- Giảm cân:</strong><br>
+                Protein: ${macrosLose.protein.toFixed(2)} g<br>
+                Fat: ${macrosLose.fat.toFixed(2)} g<br>
+                Carbs: ${macrosLose.carbs.toFixed(2)} g<br><br>
+                <strong>- Tăng cân:</strong><br>
+                Protein: ${macrosGain.protein.toFixed(2)} g<br>
+                Fat: ${macrosGain.fat.toFixed(2)} g<br>
+                Carbs: ${macrosGain.carbs.toFixed(2())} g
+            `;
         }
     </script>
 </body>
